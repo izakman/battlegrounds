@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>JSON Test</title>
+    
+    <style type="text/css">
+        #container {
+            width: 500px;
+            margin: 0 auto;
+            background-color: #333;
+            text-align: center;
+            color: white;
+        }
+        #response {
+            width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: white;
+            text-align: center;
+            color: black;
+            font-size: 14px;
+            line-height: 20px
+        }
+        #send {
+            margin: 20px 0;
+            width: 50px;
+        }
+    </style>
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/jquery.json.js"></script>
+
+    
+    <script type="text/javascript">
+        $(document).ready( function() {
+        
+            $('#add').click( function() {
+                var request = {'class':'gunner', 'name':'George'};
+                var encodedReq = $.toJSON(request);
+                $.ajax({
+                    type: 'POST',
+                    url: '../test_game/add_player',
+                    contentType: "application/json; charset=utf-8",
+                    data: encodedReq,
+                    success: function(msg) {
+                        $('#response').html('Added player with ID: ' + msg['id']);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            });
+            
+            $('#send').click( function() {
+                var request = {'id':2, 'loc':[2,4], 'messages':[{'type':'gun', 'data':'blah'}, {'type':'knife', 'data':'blah'}]};
+                var encodedReq = $.toJSON(request);
+                $.ajax({
+                    type: 'POST',
+                    url: '../test_game/player_request',
+                    contentType: "application/json; charset=utf-8",
+                    data: encodedReq,
+                    success: function(msg) {
+                        $('#response').html(msg);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                }); 
+            });
+            
+        });
+    </script>
+        
+</head>
+<body>
+    
+    <div id="container">
+        <h2>Tester for json</h2>
+        <h4>Response</h4>
+        <p id="response">.....</p>
+        <h3>Test Add Player</h3>
+        <button id="add">Add</button>
+        <h3>Test Player Request</h3>
+        <button id="send">Send</button>
+    </div>
+
+</body>
+</html>
